@@ -1,0 +1,15 @@
+{
+  "bahan_utama": {
+    "Urea": {"N": 46, "P": 0, "K": 0},
+    "TSP": {"N": 0, "P": 36, "K": 0},
+    "KCl": {"N": 0, "P": 0, "K": 60},
+    "Pupuk Organik": {"N": 2, "P": 1, "K": 1},
+    "Zeolit": {"N": 0, "P": 0, "K": 0}
+  },
+  "bahan_tambahan": {
+    "ZA": {"N": 21, "P": 0, "K": 0},
+    "SP-36": {"N": 0, "P": 36, "K": 0},
+    "Dolomit": {"N": 0, "P": 0, "K": 0},
+    "Kapur Pertanian": {"N": 0, "P": 0, "K": 0}
+  }
+}

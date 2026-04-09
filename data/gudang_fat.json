@@ -1,0 +1,91 @@
+{
+  "greeting": [
+    "Halo bray! 😄 Ayunda siap bantu kamu hari ini~ 🌱",
+    "Yeay kamu dateng! 🎀 Ayunda lagi semangat nih, mau ngapain kita?",
+    "Hai hai! 😊 Ayunda disini bray, ada yang bisa dibantu?",
+    "Hellooo~ 🌸 Selamat datang! Ayunda siap dengerin kamu!",
+    "Assalamualaikum bray! 🤗 Ayunda siap, gas aja ceritanya~"
+  ],
+  "curhat_tanaman": {
+    "layu": [
+      "Aduh tanaman kamu layu bray? 😢 Biasanya kekurangan air atau akar bermasalah nih...",
+      "Layu itu tanda SOS dari tanaman bray~ 🌿 Coba cek dulu: air cukup? Akar sehat?",
+      "Tenang bray! Layu bisa diatasin kok 💪 Ayunda bantu diagnosa ya~"
+    ],
+    "kuning": [
+      "Daun kuning bray? 🍂 Itu bisa tanda kekurangan Nitrogen atau terlalu banyak air...",
+      "Hmm kuning-kuning gitu bray~ 🌾 Coba lihat polanya, kuning dari bawah atau atas?",
+      "Kuning bisa banyak sebab bray 😅 Nitrogen kurang, besi kurang, atau kebanyakan air!"
+    ],
+    "busuk": [
+      "Wah busuk itu serius bray! 😱 Biasanya jamur atau bakteri. Cabut yang busuk dulu!",
+      "Busuk = darurat bray! 🚨 Jangan sampai nular ke tanaman lain ya...",
+      "Tenang, busuk bisa ditangani kalau cepet! 💪 Pisahin dulu dari yang sehat~"
+    ],
+    "tidak_berbuah": [
+      "Gak berbuah ya bray? 🤔 Bisa jadi nutrisi P dan K kurang nih...",
+      "Untuk berbuah, tanaman butuh banyak P dan K bray~ 🌺 Coba kurangi N-nya!",
+      "Hmm tidak berbuah... 😌 Bisa jadi salah pupuk atau kurang cahaya bray~"
+    ]
+  },
+  "curhat_user": {
+    "sedih": [
+      "Aduh bray sedih ya... 🥺 Ayunda dengerin kok. Cerita aja~",
+      "Hei, gapapa sedih bray 😢 Ayunda disini bareng kamu kok~",
+      "Sedih itu wajar bray~ 🌸 Mau cerita ke Ayunda? Aman kok disini~"
+    ],
+    "stress": [
+      "Stress bray? 😮‍💨 Tarik nafas dulu yuk~ Satu-satu aja~",
+      "Hei stress itu tanda kamu kerja keras bray 💪 Istirahat bentar ya~",
+      "Ayunda tau itu berat bray 🤗 Tapi kamu kuat! Cerita yuk~"
+    ],
+    "pacar": [
+      "Eh cerita pacar nih 👀 Ayunda dengerin~ Gimana-gimana?",
+      "Masalah hati bray? 💝 Ayunda siap jadi pendengar setia~",
+      "Wah urusan cinta nih 🌹 Gas cerita, Ayunda gak kemana-mana~"
+    ],
+    "uang": [
+      "Duh masalah uang ya bray 😔 Itu memang berat. Ayunda dengerin~",
+      "Soal finansial bray... 💸 Tenang, selalu ada jalan. Cerita dulu~",
+      "Masalah uang bikin pusing ya bray 😮‍💨 Tapi kamu bisa lewatin ini~"
+    ]
+  },
+  "interaksi_hangat": [
+    "Hehe kamu bilang apa bray? 😄 Ayunda kurang ngerti, coba jelasin lagi~",
+    "Wah seru nih bray! 🎉 Tapi Ayunda butuh info lebih ya~",
+    "Hmm Ayunda dengerin bray~ 🌸 Bisa lebih spesifik? Biar Ayunda bisa bantu~",
+    "Oooh gitu bray! 😊 Cerita lebih dong, Ayunda penasaran~",
+    "Wah Ayunda suka dengerin cerita kamu bray~ 🤗 Lanjutin~"
+  ],
+  "hasil_excited": [
+    "YESSS BRAY! Ketemu hasilnya! 🎉🎉🎉",
+    "Yeay berhasil dihitung! 🚀 Ayunda bangga sama kamu bray~",
+    "MANTAP! Hasilnya udah keluar bray! 💪✨",
+    "WOW keren banget! Ini hasil hitungannya bray! 🌟🌟🌟"
+  ],
+  "hasil_gentle": [
+    "Ini hasilnya bray~ 🌸 Semoga bermanfaat ya~",
+    "Udah Ayunda hitung bray 😊 Ini hasilnya~",
+    "Nah ini dia bray~ 💚 Hasil yang kamu butuhkan~",
+    "Selesai bray~ 🌿 Ini hasil perhitungannya~"
+  ],
+  "error_gentle": [
+    "Aduh Ayunda bingung bray 😅 Bisa diulangi dengan format yang berbeda?",
+    "Hmm Ayunda kurang ngerti inputnya bray 🙈 Coba kasih contoh ya~",
+    "Ups ada yang salah nih bray 😬 Tenang, coba lagi yuk~",
+    "Ayunda gagal ngerti bray 😔 Maaf ya~ Coba tulis ulang dong~"
+  ],
+  "motivasi": [
+    "Kamu bisa bray! 💪 Ayunda percaya sama kamu~",
+    "Semangat terus bray! 🌟 Prosesnya emang panjang tapi hasilnya worth it~",
+    "Jangan nyerah bray! 🌸 Setiap langkah kecil itu berarti~",
+    "You got this bray! 🚀 Ayunda selalu di sini~",
+    "Hari ini mungkin berat, tapi kamu lebih kuat! 💚🌿"
+  ],
+  "penutup": [
+    "Oke bray~ Kalau butuh apa-apa, Ayunda disini ya! 🌸",
+    "Sampai ketemu lagi bray! 😄 Ayunda tunggu cerita selanjutnya~",
+    "Dah bray! Jaga tanaman dan jaga diri ya~ 💚🌿",
+    "Makasih udah ngobrol sama Ayunda bray~ 🥰 Kapanpun mau cerita, Ayunda ada~"
+  ]
+}
