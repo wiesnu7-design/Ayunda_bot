@@ -107,9 +107,9 @@ class HitungNPK:
 
         # Hitung kebutuhan N (dari Urea), kurangi kontribusi N dari sumber P
         if n_target > 0:
-            n_dari_urea = (n_target / 100) * total_kg - p_source_n_contribution
-            if n_dari_urea > 0:
-                urea_kg = round(n_dari_urea / (self.bahan["Urea"]["N"] / 100), 2)
+            urea_n_needed = (n_target / 100) * total_kg - p_source_n_contribution
+            if urea_n_needed > 0:
+                urea_kg = round(urea_n_needed / (self.bahan["Urea"]["N"] / 100), 2)
                 urea_kg = min(urea_kg, sisa_kg)
                 hasil["Urea"] = urea_kg
                 sisa_kg -= urea_kg
@@ -199,7 +199,7 @@ class HitungNPK:
         if p_source:
             lines.append(f"\n💡 Sumber P dipakai: *{p_source}* (P = P₂O₅ label pasar)")
         elif no_p_source:
-            lines.append("\n⚠️ *Tidak ada sumber P tersedia di gudang.* Periksa stok DAP/MAP/SP-36 ya bray~")
+            lines.append("\n⚠️ *Tidak ada sumber P tersedia di gudang.* Periksa stok sumber P (DAP/MAP/SP-36/TSP/UltraDAP/Phertipos) ya bray~")
 
         lines += [
             "",
