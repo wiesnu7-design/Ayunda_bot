@@ -56,16 +56,51 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(greeting)
 
 
+async def cmd_teman(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Set mode ke teman (default)."""
+    context.user_data["mode"] = "teman"
+    await update.message.reply_text(
+        "Mode *teman* aktif! 🤗 Ayunda siap jadi teman setia kamu~",
+        parse_mode="Markdown",
+    )
+
+
+async def cmd_pacar(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Set mode ke pacar (Sunda style, hangat & bucin tipis)."""
+    context.user_data["mode"] = "pacar"
+    await update.message.reply_text(
+        "Mode *pacar* aktif! 💕 Ayunda disini, Akang~ Cerita aja ya~",
+        parse_mode="Markdown",
+    )
+
+
+async def cmd_mode(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Tampilkan mode aktif + cara ganti."""
+    mode = context.user_data.get("mode", "teman")
+    if mode == "pacar":
+        desc = "pacar 💕 (Sunda style, bucin tipis)"
+    else:
+        desc = "teman 🤗 (default)"
+    await update.message.reply_text(
+        f"Mode Ayunda kamu sekarang: *{desc}*\n\n"
+        "Cara ganti mode:\n"
+        "• /teman → mode teman (default)\n"
+        "• /pacar → mode pacar (Sunda style)",
+        parse_mode="Markdown",
+    )
+
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """MAIN HANDLER — routing ke kamar-kamar."""
     user_input = update.message.text
+    mode = context.user_data.get("mode", "teman")
 
     # ========== KAMAR 1A: Curhat (keyword match) ==========
     keyword_result = ayunda.detect_keyword(user_input)
     if keyword_result:
         kategori, sub_kategori = keyword_result
         respon = ayunda.get_respon(kategori, sub_kategori)
-        response = format_with_personality(respon, mode="santai")
+        response = format_with_personality(respon, mode=mode)
         await update.message.reply_text(response)
         return
 
@@ -79,7 +114,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 npk_data["N"], npk_data["P"], npk_data["K"], total_kg
             )
             respon = hitung_npk.format_hasil_reverse_npk(hasil)
-            response = format_with_personality(respon, mode="excited")
+            response = format_with_personality(respon, mode=mode)
             await update.message.reply_text(response, parse_mode="Markdown")
             return
 
@@ -87,8 +122,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     # TODO: integrate ZSNBot / Dialogflow di sini
 
     # ========== KAMAR 3: Default / warm response ==========
-    default = ayunda.get_respon("interaksi_hangat")
-    response = format_with_personality(default, mode="teman")
+    if mode == "pacar":
+        default = ayunda.get_respon("interaksi_hangat_pacar")
+    else:
+        default = ayunda.get_respon("interaksi_hangat")
+    response = format_with_personality(default, mode=mode)
     await update.message.reply_text(response)
 
 
@@ -101,6 +139,9 @@ if __name__ == "__main__":
 
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("teman", cmd_teman))
+    app.add_handler(CommandHandler("pacar", cmd_pacar))
+    app.add_handler(CommandHandler("mode", cmd_mode))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     print("🎀 Ayunda Bot Running... 💚")
