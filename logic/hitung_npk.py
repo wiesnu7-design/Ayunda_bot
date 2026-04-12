@@ -23,8 +23,12 @@ class HitungNPK:
         Coba baca angka N-P-K dari teks bebas.
         Contoh yang dikenali:
           "NPK 15-15-15", "npk 10 10 10", "buat npk 16:16:16 100kg"
-        Returns dict {'N': int, 'P': int, 'K': int} atau None jika gagal.
+          "sp36 kosong npk 16-16-16" → flag sp36_kosong=True
+        Returns dict {'N': int, 'P': int, 'K': int, 'sp36_kosong': bool}
+        atau None jika tidak ada pola NPK yang ditemukan.
         """
+        sp36_kosong = bool(re.search(r"sp[\s\-]?36\s+kosong", user_input, re.IGNORECASE))
+
         # Coba pola angka-angka-angka (pisah -, :, spasi)
         pattern = r"(\d+)\s*[-:,\s]\s*(\d+)\s*[-:,\s]\s*(\d+)"
         match = re.search(pattern, user_input)
@@ -33,26 +37,51 @@ class HitungNPK:
                 "N": int(match.group(1)),
                 "P": int(match.group(2)),
                 "K": int(match.group(3)),
+                "sp36_kosong": sp36_kosong,
             }
         return None
 
     # ------------------------------------------------------------------
     # 2. Hitung bahan dari NPK target (Reverse NPK)
     # ------------------------------------------------------------------
+    def _pilih_sumber_p(self, sp36_kosong: bool) -> str | None:
+        """
+        Pilih nama bahan sumber P yang tersedia di gudang.
+        sp36_kosong=False : coba SP-36 → TSP → DAP → MAP → UltraDAP → Phertipos
+        sp36_kosong=True  : skip SP-36/TSP, coba DAP → MAP → UltraDAP → Phertipos
+        """
+        if sp36_kosong:
+            prioritas = ["DAP", "MAP", "UltraDAP", "Phertipos"]
+        else:
+            prioritas = ["SP-36", "TSP", "DAP", "MAP", "UltraDAP", "Phertipos"]
+        for nama in prioritas:
+            if nama in self.bahan and self.bahan[nama].get("P", 0) > 0:
+                return nama
+        return None
+
     def hitung_reverse_npk(
-        self, n_target: float, p_target: float, k_target: float, total_kg: float = 100
+        self,
+        n_target: float,
+        p_target: float,
+        k_target: float,
+        total_kg: float = 100,
+        sp36_kosong: bool = False,
     ) -> dict:
         """
         Hitung berapa kg setiap bahan untuk memenuhi target NPK
         dalam total_kg pupuk campuran.
 
-        Asumsi urutan prioritas bahan: Urea → TSP/SP-36 → KCl → Pupuk Organik
+        Asumsi urutan prioritas bahan: P-source → Urea → KCl → Pupuk Organik
+        (P dihitung lebih dulu agar kontribusi N dari DAP/MAP/UltraDAP bisa
+        dikurangkan dari kebutuhan Urea, sehingga N tidak dobel.)
         Zeolit wajib 45% jika masuk kategori Pembenah Tanah.
         """
         kategori = self.kategorisasi_npk(n_target, p_target, k_target)
 
         hasil = {}
         sisa_kg = total_kg
+        p_source_name = None
+        p_source_n_contribution = 0.0
 
         # Khusus Pembenah Tanah: zeolit 45%
         if kategori == "Pembenah Tanah":
@@ -60,19 +89,30 @@ class HitungNPK:
             hasil["Zeolit"] = zeolit_kg
             sisa_kg -= zeolit_kg
 
-        # Hitung kebutuhan N (dari Urea, 46% N)
-        if n_target > 0:
-            urea_kg = round((n_target / 100) * total_kg / (self.bahan["Urea"]["N"] / 100), 2)
-            urea_kg = min(urea_kg, sisa_kg)
-            hasil["Urea"] = urea_kg
-            sisa_kg -= urea_kg
-
-        # Hitung kebutuhan P (dari TSP, 36% P)
+        # Hitung kebutuhan P terlebih dulu (biar tahu kontribusi N dari sumber P)
         if p_target > 0:
-            tsp_kg = round((p_target / 100) * total_kg / (self.bahan["TSP"]["P"] / 100), 2)
-            tsp_kg = min(tsp_kg, sisa_kg)
-            hasil["TSP"] = tsp_kg
-            sisa_kg -= tsp_kg
+            p_source_name = self._pilih_sumber_p(sp36_kosong)
+            if p_source_name:
+                p_pct = self.bahan[p_source_name]["P"] / 100
+                p_source_kg = round((p_target / 100) * total_kg / p_pct, 2)
+                p_source_kg = min(p_source_kg, sisa_kg)
+                hasil[p_source_name] = p_source_kg
+                sisa_kg -= p_source_kg
+                # Hitung kontribusi N dari sumber P (misal DAP/MAP punya N)
+                p_source_n_pct = self.bahan[p_source_name].get("N", 0) / 100
+                p_source_n_contribution = p_source_kg * p_source_n_pct
+            # Tandai jika tidak ada sumber P
+            if p_source_name is None:
+                hasil["_no_p_source"] = True
+
+        # Hitung kebutuhan N (dari Urea), kurangi kontribusi N dari sumber P
+        if n_target > 0:
+            urea_n_needed = (n_target / 100) * total_kg - p_source_n_contribution
+            if urea_n_needed > 0:
+                urea_kg = round(urea_n_needed / (self.bahan["Urea"]["N"] / 100), 2)
+                urea_kg = min(urea_kg, sisa_kg)
+                hasil["Urea"] = urea_kg
+                sisa_kg -= urea_kg
 
         # Hitung kebutuhan K (dari KCl, 60% K)
         if k_target > 0:
@@ -87,6 +127,7 @@ class HitungNPK:
 
         hasil["_kategori"] = kategori
         hasil["_total_kg"] = total_kg
+        hasil["_p_source"] = p_source_name
         return hasil
 
     # ------------------------------------------------------------------
@@ -142,6 +183,8 @@ class HitungNPK:
         """Ubah dict hasil hitung menjadi teks siap kirim."""
         kategori = hasil.get("_kategori", "-")
         total_kg = hasil.get("_total_kg", 100)
+        p_source = hasil.get("_p_source")
+        no_p_source = hasil.get("_no_p_source", False)
 
         lines = [
             f"🧮 *Hasil Hitung NPK* ({total_kg} kg)",
@@ -152,6 +195,11 @@ class HitungNPK:
         bahan_items = {k: v for k, v in hasil.items() if not k.startswith("_")}
         for nama, kg in bahan_items.items():
             lines.append(f"  • {nama}: *{kg} kg*")
+
+        if p_source:
+            lines.append(f"\n💡 Sumber P dipakai: *{p_source}* (P = P₂O₅ label pasar)")
+        elif no_p_source:
+            lines.append("\n⚠️ *Tidak ada sumber P tersedia di gudang.* Periksa stok sumber P (DAP/MAP/SP-36/TSP/UltraDAP/Phertipos) ya bray~")
 
         lines += [
             "",
