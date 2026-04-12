@@ -76,7 +76,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         if npk_data:
             total_kg = _extract_total_kg(user_input) or 100
             hasil = hitung_npk.hitung_reverse_npk(
-                npk_data["N"], npk_data["P"], npk_data["K"], total_kg
+                npk_data["N"], npk_data["P"], npk_data["K"], total_kg,
+                sp36_kosong=npk_data.get("sp36_kosong", False),
             )
             respon = hitung_npk.format_hasil_reverse_npk(hasil)
             response = format_with_personality(respon, mode="excited")

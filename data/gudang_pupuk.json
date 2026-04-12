@@ -9,6 +9,10 @@
   "bahan_tambahan": {
     "ZA": {"N": 21, "P": 0, "K": 0},
     "SP-36": {"N": 0, "P": 36, "K": 0},
+    "DAP": {"N": 18, "P": 46, "K": 0},
+    "MAP": {"N": 11, "P": 52, "K": 0},
+    "UltraDAP": {"N": 18, "P": 46, "K": 0},
+    "Phertipos": {"N": 0, "P": 20, "K": 0},
     "Dolomit": {"N": 0, "P": 0, "K": 0},
     "Kapur Pertanian": {"N": 0, "P": 0, "K": 0}
   }
